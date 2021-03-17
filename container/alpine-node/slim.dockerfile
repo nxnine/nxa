@@ -1,0 +1,9 @@
+FROM nxa/alpine-node:15.11
+FROM nxa/alpine:3.13.2
+
+COPY --from=0 /usr/bin/node /usr/bin/
+
+RUN apk upgrade --no-cache -U && \
+  apk add --no-cache binutils libstdc++ && \
+  strip /usr/bin/node && \
+  apk del binutils

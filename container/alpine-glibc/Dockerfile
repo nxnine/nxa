@@ -1,11 +1,17 @@
-FROM nxa/alpine:3.13.2
+FROM scratch as libgcc
+ADD ubuntu-focal-core-cloudimg-amd64-root.tar.gz /
+RUN chmod +x /lib/x86_64-linux-gnu/libz.so.1.2.11
+
+FROM nxa/alpine:3.13.2 as base
 
 ENV LANG=C.UTF-8
 
 # this is originally the work of Vlad Frolov and Sasha Gerrand
 # https://github.com/Docker-Hub-frolvlad/docker-alpine-glibc
-# this is just a mirror of a specific release
-# Here we install GNU libc (aka glibc) and set C.UTF-8 locale as default.
+# with some tweaks from Xavier Fournet
+# https://github.com/xfournet/jready
+
+COPY --from=libgcc /lib/x86_64-linux-gnu/libgcc_s.so.1 /lib/x86_64-linux-gnu/libz.so.1.2.11 /usr/glibc-compat/lib/
 
 RUN ALPINE_GLIBC_BASE_URL="https://github.com/nxnine/nxa/raw/master/alpine-glibc" \
     && ALPINE_GLIBC_PACKAGE_VERSION="2.33-r0" \
@@ -38,6 +44,24 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/nxnine/nxa/raw/master/alpine-glibc
     \
     && apk del glibc-i18n \
     \
+    # Fix ldconfig
+    #&& rm /usr/glibc-compat/lib/ld-linux-x86-64.so.2 \
+    #&& ln -s /usr/glibc-compat/lib/ld-2.30.so /usr/glibc-compat/lib/ld-linux-x86-64.so.2 \
+    #\
+    ## Fix ldd
+    #&& sed -i -e 's#/bin/bash#/bin/sh#' /usr/glibc-compat/bin/ldd \
+    #&& sed -i -e 's#RTLDLIST=.*#RTLDLIST="/usr/glibc-compat/lib/ld-linux-x86-64.so.2"#' /usr/glibc-compat/bin/ldd \
+    #\
+    # Isolate the glibc lib's from musl-libc lib's
+    #&& rm \
+    #    /lib/ld-linux-x86-64.so.2 \
+    #    /etc/ld.so.cache \
+    #&& echo "/usr/glibc-compat/lib" > /usr/glibc-compat/etc/ld.so.conf \
+    #&& /usr/glibc-compat/sbin/ldconfig -i \
+    #&& rm -r \
+    #    /var/cache/ldconfig/aux-cache \
+    #    /var/cache/ldconfig \
+    #\
     && rm "/root/.wget-hsts" \
     && apk del .build-dependencies \
     && rm \
