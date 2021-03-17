@@ -8,6 +8,8 @@ ENV DENO_VERSION=1.8.1 \
 
 COPY ./_entry.sh /usr/local/bin/docker-entrypoint.sh
 RUN apk add --virtual .download --no-cache curl \
+ # REMOVE ASAP (this is due to dynamic link in deno 1.8.0) - https://github.com/denoland/deno/issues/9686
+ && apk add --no-cache --update libstdc++ \
  && curl -fsSL https://github.com/nxnine/nxa/raw/master/alpine-deno/deno-v${DENO_VERSION}-x86_64-unknown-linux-gnu.zip \
          --output deno.zip \
  && unzip deno.zip \
@@ -19,9 +21,7 @@ RUN apk add --virtual .download --no-cache curl \
  && adduser -u 1993 -S deno -G deno \
  && mkdir /deno-dir/ \
  && chown deno:deno /deno-dir/ \
- && chmod 755 /usr/local/bin/docker-entrypoint.sh \
- # REMOVE ASAP (this is due to dynamic link in deno 1.8.0) - https://github.com/denoland/deno/issues/9686
- && apk add --no-cache --update libc6-compat libstdc++
+ && chmod 755 /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["run", "https://deno.land/std/examples/welcome.ts"]
