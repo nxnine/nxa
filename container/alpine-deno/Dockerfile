@@ -3,8 +3,8 @@ FROM nxa/alpine-glibc:3.13.2
 # based on https://github.com/hayd/deno-docker
 
 ENV DENO_VERSION=1.8.1 \
-    DENO_DIR /deno-dir/ \
-    DENO_INSTALL_ROOT /usr/local
+    DENO_DIR=/deno-dir/ \
+    DENO_INSTALL_ROOT=/usr/local
 
 COPY ./_entry.sh /usr/local/bin/docker-entrypoint.sh
 RUN apk add --virtual .download --no-cache curl \
