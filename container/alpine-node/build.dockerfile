@@ -69,7 +69,7 @@ RUN addgroup -g 1000 node \
   fi \
   && rm -f "node-v$NODE_VERSION-linux-$ARCH-musl.tar.xz" \
   && apk del .build-deps \
-  && rm -rf ${RM_DIRS} /node-${VERSION}* /SHASUMS256.txt /tmp/* \
+  && rm -rf /tmp/* \
         /usr/share/man/* /usr/share/doc /root/.npm /root/.node-gyp /root/.config \
         /usr/lib/node_modules/npm/man /usr/lib/node_modules/npm/doc /usr/lib/node_modules/npm/docs \
         /usr/lib/node_modules/npm/html /usr/lib/node_modules/npm/scripts \
