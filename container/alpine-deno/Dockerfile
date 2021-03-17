@@ -21,7 +21,7 @@ RUN apk add --virtual .download --no-cache curl \
  && chown deno:deno /deno-dir/ \
  && chmod 755 /usr/local/bin/docker-entrypoint.sh \
  # REMOVE ASAP (this is due to dynamic link in deno 1.8.0) - https://github.com/denoland/deno/issues/9686
- && apk add --no-cache libstdc++
+ && apk add --no-cache --update libc6-compat libstdc++
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["run", "https://deno.land/std/examples/welcome.ts"]
