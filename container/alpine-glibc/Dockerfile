@@ -7,7 +7,7 @@ ENV LANG=C.UTF-8
 # this is just a mirror of a specific release
 # Here we install GNU libc (aka glibc) and set C.UTF-8 locale as default.
 
-RUN ALPINE_GLIBC_BASE_URL="https://github.com/nxnine/nxa/raw/master/alpine-glibc/glibc-bin-2.33-r0.apk" \
+RUN ALPINE_GLIBC_BASE_URL="https://github.com/nxnine/nxa/raw/master/alpine-glibc" \
     && ALPINE_GLIBC_PACKAGE_VERSION="2.33-r0" \
     && ALPINE_GLIBC_BASE_PACKAGE_FILENAME="glibc-$ALPINE_GLIBC_PACKAGE_VERSION.apk" \
     && ALPINE_GLIBC_BIN_PACKAGE_FILENAME="glibc-bin-$ALPINE_GLIBC_PACKAGE_VERSION.apk" \
@@ -24,9 +24,9 @@ RUN ALPINE_GLIBC_BASE_URL="https://github.com/nxnine/nxa/raw/master/alpine-glibc
         1QIDAQAB\
         -----END PUBLIC KEY-----" | sed 's/   */\n/g' > "/etc/apk/keys/sgerrand.rsa.pub" \
     && wget \
-        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
-        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_PACKAGE_VERSION/$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" \
+        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
+        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
+        "$ALPINE_GLIBC_BASE_URL/$ALPINE_GLIBC_I18N_PACKAGE_FILENAME" \
     && apk add --no-cache \
         "$ALPINE_GLIBC_BASE_PACKAGE_FILENAME" \
         "$ALPINE_GLIBC_BIN_PACKAGE_FILENAME" \
